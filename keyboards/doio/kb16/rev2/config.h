@@ -23,3 +23,8 @@
     #define I2C1_SDA_PIN B11
     #define I2C_DRIVER I2CD2
 #endif
+
+
+
+/* Set 0 if debouncing isn't needed */
+#define DEBOUNCE 2

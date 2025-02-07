@@ -1,0 +1,6 @@
+#define STM32_ONBOARD_EEPROM_SIZE 20480
+#define DYNAMIC_KEYMAP_LAYER_COUNT 12
+
+#define DYNAMIC_KEYMAP_MACRO_COUNT 64
+
+#define TAPPING_TERM 150  // Adjust tap vs. hold timing
