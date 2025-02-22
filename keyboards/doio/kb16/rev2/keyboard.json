@@ -25,7 +25,7 @@
         "extrakey": true,
         "nkro": true,
         "oled": true,
-        "rgb_matrix": true,
+        "rgblight": true,
         "encoder": true
     }
 }
