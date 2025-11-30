@@ -47,6 +47,8 @@ enum custom_keycodes {
     EMAIL_SU,
     SU_PASS,
     GOOGLE_SELECTION,
+    FIND_SELECTION,
+    FIND_REPLACE,
 };
 
 
@@ -55,6 +57,7 @@ enum custom_keycodes {
 enum tap_dance_codes {
     END_SELECT,
     HOME_SELECT,
+    COPY_PASTE,
 };
 
 
@@ -94,50 +97,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
     [_BASE] = LAYOUT(
-                KC_ESC,     OSL(_SYSTEM),    OSL(_MACROS),    KC_BSPC,         TO(_BASE),
-                KC_TAB,     LCTL(KC_T),    LCTL(KC_Z),    LCTL(KC_C),                           KC_MUTE,
+                KC_ESC,     OSL(_SYSTEM),    OSL(_MACROS),    KC_BSPC,         TO(_NUMPAD),
+                KC_TAB,     LCTL(KC_T),    LCTL(KC_Z),    TD(COPY_PASTE),                           KC_MUTE,
                 LCTL(KC_LSFT),     KC_UP,    KC_SPC,   KC_ENT,                       LAG(KC_P),
                 KC_LEFT, KC_DOWN, KC_RIGHT, LCA(KC_F11)
             ),
 
 
     [_TEXTEDIT] = LAYOUT(
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______, TO(_LATEX1),
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______
+                KC_ESC,     LGUI(KC_V),    FIND_SELECTION,    KC_BSPC,         TO(_BASE),
+                KC_TAB,     LCTL(KC_S),    LCTL(KC_Z),    KC_TRNS,                           KC_TRNS,
+                LCTL(KC_LSFT),     KC_UP,    KC_SPC,   KC_ENT,                       KC_TRNS,
+                KC_LEFT, KC_DOWN, KC_RIGHT, LCA(KC_F12)
             ),
 
 
     [_NUMPAD] = LAYOUT(
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______, TO(_LATEX2),
-                _______, _______, _______, _______, _______,
-                _______, _______, _______, _______
+                KC_1, KC_2, KC_3, KC_TRNS,          TO(_BASE),
+                KC_4, KC_5, KC_6, KC_EQL,             KC_TRNS,
+                KC_7, KC_8, KC_9, KC_MINS,          KC_TRNS,
+                KC_DOT, KC_0, KC_SLSH, LSFT_T(KC_ENT)
             ),
 
 
     [_BROWSER] = LAYOUT(
-                RM_SPDU, RM_SPDD, _______, QK_BOOT, _______,
-                RM_SATU, RM_SATD, _______, _______, TO(_BASE),
-                RM_TOGG, RM_NEXT, RM_HUEU, _______, _______,
-                _______, RM_VALU, RM_HUED, RM_VALD
+                KC_ESC,     LCTL(KC_N),    FIND_SELECTION,    KC_TRNS,         TO(_BASE),
+                KC_TRNS,     LCTL(KC_T),    LCTL(KC_M),    KC_TRNS,                           KC_TRNS,
+                LCTL(LSFT(KC_EQL)),     KC_UP,    KC_SPC,   KC_ENT,                       KC_TRNS,
+                KC_LEFT, KC_DOWN, KC_RIGHT, KC_TRNS
             ),
 
 
     [_SYSTEM] = LAYOUT(
-                RM_SPDU, RM_SPDD, _______, QK_BOOT, _______,
-                RM_SATU, RM_SATD, _______, _______, TO(_BASE),
-                RM_TOGG, RM_NEXT, RM_HUEU, _______, _______,
-                _______, RM_VALU, RM_HUED, RM_VALD
+                LGUI(KC_R), RM_SPDD, _______, QK_BOOT, TO(_BASE),
+                LSG(KC_RIGHT), LGUI(KC_LEFT), LGUI(KC_RIGHT), LGUI(KC_D), KC_TRNS,
+                RM_TOGG, LSG(KC_S), RM_HUEU, _______, KC_TRNS,
+                _______, RM_VALU, LCS(KC_ESC), KC_NO
             ),
 
 
     [_MACROS] = LAYOUT(
-                RM_SPDU, RM_SPDD, _______, QK_BOOT, _______,
-                RM_SATU, RM_SATD, _______, _______, TO(_BASE),
-                RM_TOGG, RM_NEXT, RM_HUEU, _______, _______,
-                _______, RM_VALU, RM_HUED, RM_VALD
+                LSFT(KC_F3), RM_SPDD, KC_NO, VAL_LOGIN, _______,
+                TEXT_MEENER, RM_SATD, _______, _______, TO(_BASE),
+                PHONE, PHONE, PC_PASS, SU_PASS, _______,
+                EMAIL, SU_PASS, SU_EMAIL, SU_PASS
             ),
 
 
@@ -171,38 +174,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 
-// // Combos for missing letters & functions
-// const uint16_t PROGMEM BASE_2TEXT[] = {LCA(KC_F11), KC_ESC, COMBO_END};   // H = T + A
-// const uint16_t PROGMEM BASE_2BROWSING[] = {LCA(KC_F11), OSL(_SYSTEM), COMBO_END};   // Z = S + D
-// const uint16_t PROGMEM BASE_2LATEX[] = {LCA(KC_F11), OSL(_MACROS), COMBO_END}; // ? = , + .
-// const uint16_t PROGMEM BASE_DEL[] = {LCA(KC_F11), KC_BSPC, COMBO_END}; // Enter = Space + Backspace
-// const uint16_t PROGMEM BASE_ALTTAB[] = {LCA(KC_F11), KC_TAB, COMBO_END}; // Esc = Space + Shift
-// const uint16_t PROGMEM BASE_TABOPEN[] = {LCA(KC_F11), LCTL(KC_T), COMBO_END}; // Delete = Backspace + Shift
-// const uint16_t PROGMEM BASE_REDO[] = {LCA(KC_F11), LCTL(KC_Z),  COMBO_END}; // Redo = Alt + Ctrl + Z
-// const uint16_t PROGMEM BASE_NEXTTAB[] = {LCA(KC_F11), KC_UP,  COMBO_END}; // Ctrl+F2
-// const uint16_t PROGMEM BASE_PREVTAB[] = {LCA(KC_F11), KC_DOWN,     COMBO_END}; // Toggle LYRNAV Layer = Shift + Ctrl + V 
-// const uint16_t PROGMEM BASE_BACK[] = {LCA(KC_F11), KC_LEFT,    COMBO_END}; // Toggle HKEYS Layer = Alt + Ctrl + C
-// const uint16_t PROGMEM BASE_FORWARD[] = {LCA(KC_F11), KC_RIGHT,    COMBO_END}; // Toggle FN Layer = Ctrl + L + C
-// const uint16_t PROGMEM BASE_PCLOCK[] = {LCA(KC_F11), KC_ENT,    COMBO_END}; // Toggle TYPING SYSTEM Layer = Ctrl + W + X
-// const uint16_t PROGMEM BASE_ENDSELECT[] = {LCTL(KC_LSFT), KC_RIGHT,    COMBO_END}; // Toggle FN Layer = Ctrl + L + C
-// const uint16_t PROGMEM BASE_HOMESELECT[] = {LCTL(KC_LSFT), KC_LEFT,    COMBO_END}; // Toggle TYPING SYSTEM Layer = Ctrl + W + X
-
-// combo_t key_combos[] = {
-//     COMBO(BASE_2TEXT, TO(_TEXTEDIT)),      
-//     COMBO(BASE_2BROWSING, TO(_BROWSER)),       
-//     COMBO(BASE_2LATEX, TO(_LATEX1)),        
-//     COMBO(BASE_DEL, KC_DEL),            
-//     COMBO(BASE_ALTTAB, LALT(KC_TAB)),       
-//     COMBO(BASE_TABOPEN, LSFT(KC_T)),         
-//     COMBO(BASE_REDO, LCTL(KC_Y)),         
-//     COMBO(BASE_NEXTTAB, LCTL(KC_PGDN)),      
-//     COMBO(BASE_PREVTAB, LCTL(KC_PGUP)),      
-//     COMBO(BASE_BACK, KC_WBAK),           
-//     COMBO(BASE_FORWARD, KC_WFWD),           
-//     COMBO(BASE_PCLOCK, LGUI(KC_L)),         
-//     COMBO(BASE_ENDSELECT, TD(END_SELECT)),     
-//     COMBO(BASE_HOMESELECT,TD(HOME_SELECT)),     
-// };
 
 
 
@@ -283,6 +254,7 @@ void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
 tap_dance_action_t tap_dance_actions[] = {
     [END_SELECT] = ACTION_TAP_DANCE_TAP_HOLD(LCTL(LSFT(KC_RIGHT)), LSFT(KC_END)),
     [HOME_SELECT] = ACTION_TAP_DANCE_TAP_HOLD(LCTL(LSFT(KC_LEFT)), LSFT(KC_HOME)),
+    [COPY_PASTE] = ACTION_TAP_DANCE_TAP_HOLD(LCTL(KC_C), LCTL(KC_V)),
 
 };
 
@@ -364,6 +336,32 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(LCTL(KC_V));
                 wait_ms(100);
                 tap_code16(LCTL(KC_ENTER));
+            }
+            break;
+
+            
+        case FIND_SELECTION:
+            if (record->event.pressed) {
+                tap_code16(LCTL(KC_C));
+                wait_ms(150);
+                tap_code16(LCTL(KC_F));
+                wait_ms(100);
+                tap_code16(LCTL(KC_V));
+                wait_ms(50);
+                tap_code16(KC_ENT);
+            }
+            break;
+
+
+        case FIND_REPLACE:
+            if (record->event.pressed) {
+                tap_code16(LCTL(KC_C));
+                wait_ms(150);
+                tap_code16(LCTL(KC_H));
+                wait_ms(100);
+                tap_code16(LCTL(KC_V));
+                wait_ms(50);
+                tap_code16(KC_ENT);
             }
             break;
 
