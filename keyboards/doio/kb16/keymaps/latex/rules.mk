@@ -1,0 +1,8 @@
+# Encoder enabled
+ENCODER_MAP_ENABLE = yes
+ENCODER_ENABLE = yes
+TAP_DANCE_ENABLE = yes
+RGBLIGHT_ENABLE = yes
+RGBLIGHT_DRIVER = ws2812
+VPATH += keyboards/gboards/
+COMBO_ENABLE = yes
