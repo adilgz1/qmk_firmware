@@ -34,7 +34,6 @@ enum custom_keycodes {
     BASE_SHIFT = SAFE_RANGE,
     COPY_TYPE,
     PASTE_TEXT,
-    ENTER_CMD,
     NUM_NAV,
     OPEN_IN_TERM,
     COPY_CMDOPT,
@@ -44,7 +43,7 @@ enum custom_keycodes {
     SPACE_COMMA,
     LEFT_HOME,
     RIGHT_END,
-    DOT_SHIFT,
+    QUES_SHIFT,
 };
 
 
@@ -71,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC,      KC_SPC,      LGUI(KC_Z),  KC_DEL,      TO(_TYPE1),
         COPY_TYPE,   LGUI(KC_SPC), KC_UP,       KC_TAB,      KC_MUTE,
         PASTE_TEXT,  LEFT_HOME,     KC_DOWN,     RIGHT_END,     KC_MPLY,
-        NUM_NAV,     ENTER_CMD,   KC_LSFT,     KC_LALT
+        NUM_NAV,     LGUI_T(KC_ENTER),   KC_LSFT,     KC_LALT
     ),
 
     [_NAV] = LAYOUT(
@@ -92,20 +91,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         LGUI(KC_A), KC_SPC,       LGUI(KC_Z), KC_BSPC,       TO(_BASE),
         COPY_CMDOPT,       LGUI(KC_H), KC_UP,       KC_TAB,         KC_MUTE,
         PASTE_SFTOPT,       KC_LEFT,       KC_DOWN,       KC_RIGHT,         KC_MPLY,
-        BASE_CMDSFT,       ENTER_CMD,       KC_LSFT,       KC_LALT
+        BASE_CMDSFT,       LCTL_T(KC_ENTER),       KC_LSFT,       KC_LALT
     ),
 
     [_TYPE1] = LAYOUT(
         KC_BSPC,       KC_A,       KC_B,       KC_C,       TO(_BASE),
         SPACE_COMMA,       KC_D,       KC_E,       KC_F,         KC_MUTE,
-        DOT_SHIFT,       KC_G,       KC_H,       KC_I,         KC_MPLY,
+        LSFT_T(KC_DOT),       KC_G,       KC_H,       KC_I,         KC_MPLY,
         MO(_TYPE2),       KC_J,       KC_K,       KC_L
     ),
 
     [_TYPE2] = LAYOUT(
         KC_Y,       KC_M,       KC_N,       KC_O,       TO(_BASE),
         KC_Z,       KC_P,       KC_Q,       KC_R,         KC_MUTE,
-        LSFT(KC_SLSH),       KC_S,       KC_T,       KC_U,         KC_MPLY,
+        QUES_SHIFT,       KC_S,       KC_T,       KC_U,         KC_MPLY,
         KC_TRNS,       KC_V,       KC_W,       KC_X
     )
 };
@@ -226,7 +225,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint16_t timer_base_shift;
     static uint16_t timer_copy_type;
     static uint16_t timer_paste_text;
-    static uint16_t timer_enter_cmd;
     static uint16_t timer_num_nav;
     static uint16_t timer_copy_cmds;
     static uint16_t timer_paste_sftopt;
@@ -235,7 +233,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint16_t timer_space_comma;
     static uint16_t timer_left_home;
     static uint16_t timer_right_end;
-    static uint16_t timer_dot_shift;
+    static uint16_t timer_ques_shift;
     tap_dance_action_t *action;
 
     switch (keycode) {
@@ -275,17 +273,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case ENTER_CMD:  // ENTER on tap, CMD on hold
-            if (record->event.pressed) {
-                timer_enter_cmd = timer_read();
-                register_code(KC_LGUI);
-            } else {
-                unregister_code(KC_LGUI);
-                if (timer_elapsed(timer_enter_cmd) < 200) {
-                    tap_code(KC_ENT);
-                }
-            }
-            return false;
+
 
         case NUM_NAV:  // TO(NUM) on tap, MO(NAV) if held
             if (record->event.pressed) {
@@ -355,65 +343,77 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-        case DOT_SLSH:  // TO(BASE) on tap, LShift on hold
+        case DOT_SLSH:  
             if (record->event.pressed) {
                 timer_base_shift = timer_read();
-                register_code(KC_SLSH);
             } else {
-                unregister_code(KC_LSFT);
                 if (timer_elapsed(timer_dot_slsh) < 200) {
                     register_code(KC_DOT);
+                    unregister_code(KC_DOT);
+                } else {
+                    unregister_code(KC_DOT);
+                    register_code(KC_SLSH);
+                    unregister_code(KC_SLSH);
                 }
             }
             return false;
 
-        case SPACE_COMMA:  // CMD+V on tap, TO(TEXT) if held
+        case SPACE_COMMA:  
             if (record->event.pressed) {
                 timer_space_comma = timer_read();
             } else {
                 if (timer_elapsed(timer_space_comma) < 200) {
                     register_code(KC_SPC);
+                    unregister_code(KC_SPC);
                 } else {
-                    layer_move(_TEXT);
+                    unregister_code(KC_SPC);
+                    register_code(KC_COMM);
+                    unregister_code(KC_COMM);
                 }
             }
             return false;
 
-        case LEFT_HOME:  // CMD+V on tap, TO(TEXT) if held
+        case LEFT_HOME:  
             if (record->event.pressed) {
                 timer_left_home = timer_read();
             } else {
                 if (timer_elapsed(timer_left_home) < 200) {
                     register_code(KC_LEFT);
+                    unregister_code(KC_LEFT);
                 } else {
+                    unregister_code(KC_LEFT);
                     register_code(KC_HOME);
+                    unregister_code(KC_HOME);
                 }
             }
             return false;
         
-        case RIGHT_END:  // CMD+V on tap, TO(TEXT) if held
+        case RIGHT_END:  
             if (record->event.pressed) {
                 timer_right_end = timer_read();
             } else {
                 if (timer_elapsed(timer_right_end) < 200) {
                     register_code(KC_RIGHT);
+                    unregister_code(KC_RIGHT);
                 } else {
+                    unregister_code(KC_RIGHT);
                     register_code(KC_END);
+                    unregister_code(KC_END);
                 }
             }
             return false;
-        
-        case DOT_SHIFT:  // ENTER on tap, CMD on hold
+            
+        case QUES_SHIFT:  // Question mark on tap, Left Shift on hold
             if (record->event.pressed) {
-                timer_dot_shift = timer_read();
+                timer_ques_shift = timer_read();
                 register_code(KC_LSFT);
             } else {
                 unregister_code(KC_LSFT);
-                if (timer_elapsed(timer_dot_shift) < 200) {
-                    tap_code(KC_DOT);
+                if (timer_elapsed(timer_ques_shift) < 200) {
+                    tap_code16(LSFT(KC_SLSH));  // Question mark
                 }
             }
-            return false;
+            return false;        
 
         // list all tap dance keycodes with tap-hold configurations
         case TD(BRACKETS): 
