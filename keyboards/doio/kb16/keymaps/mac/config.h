@@ -3,7 +3,6 @@
 
 #define DYNAMIC_KEYMAP_MACRO_COUNT 64
 #define RGBLIGHT_LED_COUNT 16
-#define COMBO_VARIABLE_LEN
 
 #define TAPPING_TERM 175  // Adjust tap vs. hold timing
 #define TAPPING_TOGGLE 2 // Tapping this number of times holds the key until tapped once again.
